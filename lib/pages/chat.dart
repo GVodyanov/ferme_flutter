@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:timer_builder/timer_builder.dart';
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -23,6 +24,8 @@ class _ChatState extends State<Chat> {
 
   Future<String> getChat(selection) async {
     Response response = await get(Uri.parse('${url}pages/loadChat.php?selection=$selection'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(selection, response.body);
     return response.body;
   }
 
@@ -200,14 +203,12 @@ class _ChatState extends State<Chat> {
         }));
   }
 
-
   @override
   Widget build(BuildContext context) {
 
     //scroll controller per partire dal basso
     ScrollController _scrollController = new ScrollController();
 
-    //ecco i dati che riceviamo da load_chat.dart
     Map data = {};
     data = data.isNotEmpty ? data : ModalRoute.of(context)!.settings.arguments as Map;
     String selection = data['selection'];
@@ -263,15 +264,26 @@ class _ChatState extends State<Chat> {
                                     'assets/pictures/im${i['picture']}.png'
                                 ),
                                 title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          unescape.convert(i['username']),
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                          )
+                                      SizedBox(
+                                        height: 25,
+                                        child: RawMaterialButton(
+                                          constraints: BoxConstraints(minWidth: 0, maxWidth: 50000),
+                                          child: Text(
+                                            unescape.convert(i['username']),
+                                            style: TextStyle (
+                                              fontSize: 17,
+                                              color: Colors.black54,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pushNamed(context, '/viewprofile', arguments:{'id': i['userId']});
+                                          }
+                                        ),
                                       ),
-                                      whichOptions(i['userId'], gotInt, i,
-                                          data['selection'])
+                                      whichOptions(i['userId'], gotInt, i, data['selection'])
                                     ]
                                 ),
                                 tileColor: HexColor('#eeeeee'),

@@ -49,7 +49,7 @@ class _WriteState extends State<Write> {
     return Scaffold (
       appBar: AppBar(
         backgroundColor: HexColor("#00ABDE"),
-        title: Text('Scrivi Messaggio'),
+        title: Text('Scrivete Messaggio'),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(

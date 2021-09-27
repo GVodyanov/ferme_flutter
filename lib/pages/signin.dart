@@ -97,7 +97,7 @@ class _SigninState extends State<Signin> {
                         signin(email, password).then((value) {
                           isLogged = value;
                           if (isLogged == true) {
-                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(context, '/home');
                           } else {
                             setState(() {
                               buttonText = 'Email o Password sbagliati, Riprova';
@@ -120,7 +120,7 @@ class _SigninState extends State<Signin> {
                 )
               ),
               onPressed: () {
-
+                Navigator.pushReplacementNamed(context, '/signup');
               },
 
             )

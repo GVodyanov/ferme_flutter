@@ -1,17 +1,235 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../services/prefs.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  void menuActions (action, context) {
+    if (action == 3) Navigator.pushNamed(context, '/privacy');
+    if (action == 4) Navigator.pushNamed(context, '/netiquette');
+    if (action == 5) Navigator.pushNamed(context, '/info');
+    if (action == 0) {
+      if (gotInt != null) {
+        Navigator.pushNamed(context, '/profile');
+      } else {
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Prima di visualizzare il vostro profilo dovete accedere con un account",
+          style: AlertStyle (
+            animationType: AnimationType.fromTop,
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Chiudi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              color: HexColor("#00ABDE"),
+            ),
+            DialogButton(
+              child: Text(
+                "Accedi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              gradient: LinearGradient(colors: [
+                HexColor('#00ff7f'),
+                HexColor('#00d868'),
+              ]),
+            )
+          ],
+        ).show();
+      }
+    }
+    if (action == 1) {
+      if (gotInt != null) {
+        Navigator.pushNamed(context, '/finduser');
+      } else {
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Prima di cercare utenti dovete accedere con un account",
+          style: AlertStyle (
+            animationType: AnimationType.fromTop,
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Chiudi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              color: HexColor("#00ABDE"),
+            ),
+            DialogButton(
+              child: Text(
+                "Accedi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              gradient: LinearGradient(colors: [
+                HexColor('#00ff7f'),
+                HexColor('#00d868'),
+              ]),
+            )
+          ],
+        ).show();
+      }
+    }
+    if (action == 2) {
+      if (gotInt != null) {
+        deleteId();
+        setState(() {
+          gotInt = null;
+        });
+      } else {
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Prima dovete accedere con il vostro account",
+          style: AlertStyle (
+            animationType: AnimationType.fromTop,
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Chiudi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              color: HexColor("#00ABDE"),
+            ),
+            DialogButton(
+              child: Text(
+                "Accedi",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              gradient: LinearGradient(colors: [
+                HexColor('#00ff7f'),
+                HexColor('#00d868'),
+              ]),
+            )
+          ],
+        ).show();
+      }
+    }
+  }
+
+  int? gotInt;
+  String? gotPassword;
+  _HomeState() {
+    getId().then((val) =>
+        setState(() {
+          if (val != null) {
+            gotInt = val;
+          }
+        }));
+    getPassword().then((valP) =>
+        setState(() {
+          if (valP != null) {
+            gotPassword = valP;
+          }
+        }));
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     //semplice menu per scegliere i forum non c'e' niente da spiegare
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: HexColor("#00ABDE"),
         title: Text('Benvenuto a FerMe'),
         centerTitle: true,
+        leading: PopupMenuButton(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(
+              Icons.menu,
+            ),
+          ),
+          onSelected: (item) => menuActions(item, context),
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              child: Row (
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Profilo'),
+                  Icon(Icons.person, color: Colors.black),
+                ]
+              ),
+              value: 0
+            ),
+            PopupMenuItem(
+              child: Row (
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Cerca utente'),
+                  Icon(Icons.person_search, color: Colors.black),
+                ]
+              ),
+              value: 1
+            ),
+            PopupMenuItem(
+                child: Row (
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Privacy Policy'),
+                      Icon(Icons.lock, color: Colors.black),
+                    ]
+                ),
+                value: 3,
+            ),
+            PopupMenuItem(
+              child: Row (
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Netiquette'),
+                    Icon(Icons.fact_check, color: Colors.black),
+                  ]
+              ),
+              value: 4,
+            ),
+            PopupMenuItem(
+              child: Row (
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Info'),
+                    Icon(Icons.info, color: Colors.black),
+                  ]
+              ),
+              value: 5,
+            ),
+            PopupMenuItem(
+              child: Row (
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Esci'),
+                  Icon(Icons.logout, color: Colors.black),
+                ]
+              ),
+              value: 2
+            )
+          ]
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
