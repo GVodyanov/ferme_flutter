@@ -222,7 +222,7 @@ class _ChatState extends State<Chat> {
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
               //preparatevi per codice schifoso
-              List convert = ['r/' , '[{"idk" : null}]', 'programminghorror'];
+              List convert = ['placeholder' , '[{"none" : null}]', 'placeholder'];
               if (snapshot.data != null) {
                 convert[1] = snapshot.data;
               }

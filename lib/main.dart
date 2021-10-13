@@ -49,67 +49,70 @@ void main(context) async {
     },
   ));
   var platform = Theme.of(context).platform;
-  if (platform == TargetPlatform.iOS || platform == TargetPlatform.android) FlutterBackgroundService.initialize(shouldNotify());
+  // if (platform == TargetPlatform.iOS || platform == TargetPlatform.android) FlutterBackgroundService.initialize(shouldNotify());
 }
 
-showNotification (title) async{
-  FlutterLocalNotificationsPlugin localNotification;
+/// TODO NOTIFICAZIONI NON FUNZIONANO BENE, PER QUESTO LA PARTE SEGUENTE E' COMMENTATA, SE RIUSCITE A FARLO FUNZIONARE VI RINGRAZIO
 
-  var androidInitialize = new AndroidInitializationSettings('launcher_icon');
-  var iOSInitialize = new IOSInitializationSettings();
-
-  var initializationSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-  localNotification = new FlutterLocalNotificationsPlugin();
-  localNotification.initialize(initializationSettings);
-
-  var androidDetails = new AndroidNotificationDetails("channelId", "Local Notification", "desc", importance: Importance.high);
-  var iOSDetails = new IOSNotificationDetails();
-  var generalNotificationDetails = new NotificationDetails(android: androidDetails, iOS : iOSDetails);
-
-  localNotification.show(1, title, null, generalNotificationDetails);
-}
+//
+// showNotification (title) async{
+//   FlutterLocalNotificationsPlugin localNotification;
+//
+//   var androidInitialize = new AndroidInitializationSettings('launcher_icon');
+//   var iOSInitialize = new IOSInitializationSettings();
+//
+//   var initializationSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+//   localNotification = new FlutterLocalNotificationsPlugin();
+//   localNotification.initialize(initializationSettings);
+//
+//   var androidDetails = new AndroidNotificationDetails("channelId", "Local Notification", "desc", importance: Importance.high);
+//   var iOSDetails = new IOSNotificationDetails();
+//   var generalNotificationDetails = new NotificationDetails(android: androidDetails, iOS : iOSDetails);
+//
+//   localNotification.show(1, title, null, generalNotificationDetails);
+// }
 
 //TODO max not
 
-shouldNotify () async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // final service = FlutterBackgroundService();
-  // service.setForegroundMode(false);
-  while (true) {
-    List forums = [
-      'informatica',
-      'cucina',
-      'sport',
-      'anime',
-      'arte',
-      'cinema',
-      'compiti',
-      'gaming',
-      'hobby',
-      'musica',
-      'altro'
-    ];
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String newForum = 'null';
-    for (var i in forums) {
-      Response response = await get(
-          Uri.parse('${url}pages/loadChat.php?selection=$i'));
-      String result = response.body;
-      String? current = prefs.getString('$i');
-
-      if (current == null || current == 'null') {
-        await prefs.setString('$i', result);
-      }
-      if (result != current && current != null && current != 'null' && result.length > current.length) {
-        await prefs.setString('$i', result);
-        newForum = 'C\'è un nuovo messaggio in $i';
-        break;
-      }
-    }
-    if (newForum != 'null') {
-      showNotification(newForum);
-    }
-    Future.delayed(Duration(minutes: 5), () {
-    });
-  }
+// shouldNotify () async {
+//   // WidgetsFlutterBinding.ensureInitialized();
+//   // final service = FlutterBackgroundService();
+//   // service.setForegroundMode(false);
+//   while (true) {
+//     List forums = [
+//       'informatica',
+//       'cucina',
+//       'sport',
+//       'anime',
+//       'arte',
+//       'cinema',
+//       'compiti',
+//       'gaming',
+//       'hobby',
+//       'musica',
+//       'altro'
+//     ];
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String newForum = 'null';
+//     for (var i in forums) {
+//       Response response = await get(
+//           Uri.parse('${url}pages/loadChat.php?selection=$i'));
+//       String result = response.body;
+//       String? current = prefs.getString('$i');
+//
+//       if (current == null || current == 'null') {
+//         await prefs.setString('$i', result);
+//       }
+//       if (result != current && current != null && current != 'null' && result.length > current.length) {
+//         await prefs.setString('$i', result);
+//         newForum = 'C\'è un nuovo messaggio in $i';
+//         break;
+//       }
+//     }
+//     if (newForum != 'null') {
+//       showNotification(newForum);
+//     }
+//     Future.delayed(Duration(minutes: 5), () {
+//     });
+//   }
 }
